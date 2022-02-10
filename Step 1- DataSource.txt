@@ -1,0 +1,7 @@
+Data for this project is sourced from the following links:
+
+University data: https://www.kaggle.com/sumithbhongale/american-university-data-ipeds-dataset/home
+LinkedIn data: https://www.kaggle.com/killbot/linkedin-profiles-and-jobs-data
+
+Both data sets were extracted used in the following analysis.  Some variables were stripped from the data because they were not necessary for the analysis.
+

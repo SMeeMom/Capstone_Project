@@ -1,0 +1,23 @@
+/****************Import in LinkedIn Age data******************/
+%web_drop_table(WORK.LInkedInAge);
+
+
+FILENAME REFFILE '/home/u49163976/CAPSTONE/LINKEDINAGE.xlsx';
+
+PROC IMPORT DATAFILE=REFFILE
+	DBMS=XLSX
+	OUT=WORK.LInkedInAge;
+	GETNAMES=YES;
+RUN;
+
+PROC CONTENTS DATA=WORK.LInkedInAge; RUN;
+
+
+%web_open_table(WORK.LInkedInAge);
+
+/*********************Exploring Data ***********************/
+proc univariate data=WORK.LINKEDINAGE;
+	ods select Histogram;
+	var AGEESTIMATE;
+	histogram AGEESTIMATE;
+run;

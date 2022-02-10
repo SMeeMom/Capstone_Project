@@ -1,0 +1,62 @@
+/*SAS Code for import of the University_Admissions_State data generated through SQL code*/
+
+FILENAME REFFILE '/home/u49163976/CAPSTONE/University_Admissions_State.xlsx';
+
+PROC IMPORT DATAFILE=REFFILE
+	DBMS=XLSX
+	OUT=WORK.University;
+	GETNAMES=YES;
+RUN;
+
+PROC CONTENTS DATA=WORK.University; RUN;
+
+
+%web_open_table(WORK.University);
+
+/**************************************SAS Code for proc means for two variables**********************/
+PROC MEANS DATA= WORK.UNIVERSITY;
+var adm_per adm_dec;
+RUN;
+
+
+
+/********************SAS Code for histograms and boxplots of University Admissions percent and Enrollment percent******/
+options validvarname=any;
+ods noproctitle;
+ods graphics / imagemap=on;
+
+/* Histogram and box plot template */
+proc template;
+	define statgraph histobox;
+		dynamic AVAR;
+		begingraph;
+		entrytitle "Distribution of " eval(catq('q', colname(AVAR)));
+		layout lattice / rows=2 columndatarange=union rowgutter=0 rowweights=(0.75 
+			0.25);
+		layout overlay / yaxisopts=(offsetmax=0.1) xaxisopts=(display=none);
+		layout gridded / columns=2 border=on autoalign=(topright topleft);
+		endlayout;
+		histogram AVAR /;
+		endlayout;
+		layout overlay /;
+		BoxPlot Y=AVAR / orient=horizontal;
+		endlayout;
+		endlayout;
+		endgraph;
+	end;
+run;
+
+proc sgrender data=WORK.UNIVERSITY template=histobox;
+	dynamic AVAR='ADM_PER';
+run;
+
+proc sgrender data=WORK.UNIVERSITY template=histobox;
+	dynamic AVAR='ENR_PER';
+run;
+
+/******************************Scatterplot of University Graduation of 4 year degree by state***********/
+proc sgplot data=WORK.UNIVERSITY;
+	scatter x=BACHELOR_DEGREE y=STATE_VAL /;
+	xaxis grid;
+	yaxis grid;
+run;

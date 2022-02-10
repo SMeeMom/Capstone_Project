@@ -1,0 +1,17 @@
+/*********SAS Paired TTest for significance on ADM_PER and ENR_PER variables*******/
+data Work._Paired_diffs_;
+	set WORK.UNIVERSITY;
+	_Difference_=ADM_PER - ENR_PER;
+	label _Difference_="Difference: ADM_PER - ENR_PER";
+run;
+
+/* Test for normality */
+proc univariate data=Work._Paired_diffs_ normal mu0=0;
+	ods select TestsForNormality;
+	var _Difference_;
+run;
+
+/* t test */
+proc ttest data=WORK.UNIVERSITY sides=2 h0=0 plots(showh0);
+	paired ADM_PER*ENR_PER;
+run;
